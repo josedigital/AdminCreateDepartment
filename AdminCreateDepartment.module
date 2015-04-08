@@ -1,0 +1,193 @@
+<?php
+
+/**
+ * ProcessWire 'Create Department' module
+ *
+ * Creates department subpages when a new department is added.
+ * 
+ * ProcessWire 2.x 
+ * Copyright (C) 2010 by Ryan Cramer 
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ * 
+ * http://www.processwire.com
+ *
+ * Creted by alex rodriguez
+ * http://www.horchatadesign.com
+ *
+ */
+
+class AdminCreateDepartment extends WireData implements Module {
+
+	/**
+	 * getModuleInfo is a module required by all modules to tell ProcessWire about them
+	 *
+	 * @return array
+	 *
+	 */
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Create Department',
+			'version' => 1, 
+			'summary' => 'Creates department sub pages when department is created.',
+			'author' => 'alex rodriguez, horchatadesign.com',
+			'singular' => true, 
+			'autoload' => true, 
+			);
+	}
+
+	public function init() {
+		// add a hook after a page is saved, call createpages method
+		$this->pages->addHookAfter('save', $this, 'createpages'); 
+	}
+
+
+	/**
+	 * createpages hooks into the $pages->save method and creates sub pages automatically
+	 *
+	 */
+	public function createpages($event) {
+		// get page from first argument (e.g. id=1018)
+		$page = $event->arguments[0];
+
+		if($page->template == 'department-homepage') {
+
+			// only create subpages if the page has no children
+			if(!$page->numChildren) :
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('articles');
+				$title = wire('sanitizer')->text('Articles');
+
+				// create 'articles' page
+				$p = new Page();
+				$p->template = 'department-listpage';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				// $p->addStatus(Page::statusUnpublished);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('blog');
+				$title = wire('sanitizer')->text($page->title . ' Blog');
+
+				// create 'blog' subpage
+				$p = new Page();
+				$p->template = 'blog-homepage';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				// $p->addStatus(Page::statusUnpublished);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('contact-information');
+				$title = wire('sanitizer')->text('Contact Information');
+
+				// create 'articles' page
+				$p = new Page();
+				$p->template = 'contact-information';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				$p->addStatus(Page::statusHidden);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('faqs');
+				$title = wire('sanitizer')->text('FAQs');
+
+				// create 'articles' page
+				$p = new Page();
+				$p->template = 'department-listpage';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				$p->addStatus(Page::statusHidden);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('forms');
+				$title = wire('sanitizer')->text('Forms');
+
+				// create 'articles' page
+				$p = new Page();
+				$p->template = 'department-listpage';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				$p->addStatus(Page::statusHidden);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('navigation');
+				$title = wire('sanitizer')->text('Navigation');
+
+				// create 'articles' page
+				$p = new Page();
+				$p->template = 'department-navigation';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				$p->addStatus(Page::statusHidden);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+				// sanitize and make names appropriate for fields
+				$name = wire('sanitizer')->pageName('promos');
+				$title = wire('sanitizer')->text('Promos');
+
+				// create 'articles' page
+				$p = new Page();
+				$p->template = 'department-listpage';
+				$p->parent = $page;
+				$p->name = $name;
+				$p->title = $title;
+				$p->addStatus(Page::statusHidden);
+				$p->of(false);
+				$p->save();
+				$p->of(true);
+
+
+
+
+
+			endif;
+
+
+		}
+
+	}
+
+}
